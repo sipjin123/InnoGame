@@ -15,20 +15,7 @@ public class GridHandler : MonoBehaviour
     private List<GameObject> _ErrorIndicators;
 
     private Vector2 _SnapGridPosition;
-
-    private void Start()
-    {
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode
-            .Space))
-        {
-            GameObject temp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            temp.transform.position = new Vector3(_SnapGridPosition.x, 1, _SnapGridPosition.y);
-        }
-    }
+    
 
     public bool SnapToGrid(Transform bldng, Vector2 size)
     {
