@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
-using UnityEngine.Events;
+using Zenject;
 
 public class ResourceManager : MonoBehaviour
 {
-    [SerializeField]
+    [Inject]
     private UIResourceHandler _UIResourceHandler;
 
     private ConsumeResourceEvent _ConsumeResourceEvent = new ConsumeResourceEvent();
@@ -20,22 +21,8 @@ public class ResourceManager : MonoBehaviour
     private void Awake()
     {
         ManagerRegistry.Register<ResourceManager>(this);
-
-
-        _ResourceData.Find(_ => _.ResourceType == ResourceType.Gold).Quantity = 100;
-        _ResourceData.Find(_ => _.ResourceType == ResourceType.Steel).Quantity = 0;
-        _ResourceData.Find(_ => _.ResourceType == ResourceType.Wood).Quantity = 0;
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Y))
-        {
-            _ResourceData.Find(_ => _.ResourceType == ResourceType.Gold).Quantity = 1000;
-            _ResourceData.Find(_ => _.ResourceType == ResourceType.Steel).Quantity = 1000;
-            _ResourceData.Find(_ => _.ResourceType == ResourceType.Wood).Quantity = 1000;
-        }
-    }
 
     void Start()
     {
@@ -43,16 +30,34 @@ public class ResourceManager : MonoBehaviour
         {
             var resource = _ResourceData.Find(q => q.ResourceType == _.ResourceType);
             resource.Quantity -= _.Quantity;
-
             _UIResourceHandler.UpdateResourceText(_.ResourceType, resource.Quantity);
+            MessageBroker.Default.Publish(new ResourcesUpdatedSignal());
         });
         _AddResourceEvent.AddListener(_ =>
         {
             var resource = _ResourceData.Find(q => q.ResourceType == _.ResourceType);
             resource.Quantity += _.Quantity;
             _UIResourceHandler.UpdateResourceText(_.ResourceType, resource.Quantity);
+            MessageBroker.Default.Publish(new ResourcesUpdatedSignal());
         });
+
+
+        _ResourceData.Find(_ => _.ResourceType == ResourceType.Gold).Quantity = 100;
+        _ResourceData.Find(_ => _.ResourceType == ResourceType.Steel).Quantity = 0;
+        _ResourceData.Find(_ => _.ResourceType == ResourceType.Wood).Quantity = 0;
+
+        MessageBroker.Default.Publish(new ResourcesUpdatedSignal());
     }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            _ResourceData.Find(_ => _.ResourceType == ResourceType.Gold).Quantity = 1000;
+            _ResourceData.Find(_ => _.ResourceType == ResourceType.Steel).Quantity = 1000;
+            _ResourceData.Find(_ => _.ResourceType == ResourceType.Wood).Quantity = 1000;
+        }
+    }
+
 
     public Sprite RequestSprite(ResourceType type)
     {
@@ -66,7 +71,6 @@ public class ResourceManager : MonoBehaviour
         {
             if (costList[i].Quantity > _ResourceData.Find(_ => _.ResourceType == costList[i].ResourceType).Quantity)
             {
-                Debug.LogError("Not enough : " + costList[i].Quantity + " " + costList[i].ResourceType);
                 return false;
             }
         }

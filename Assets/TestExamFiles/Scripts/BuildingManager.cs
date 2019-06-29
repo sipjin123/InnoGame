@@ -1,21 +1,22 @@
 ﻿using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
+using Zenject;
 
 public class BuildingManager : MonoBehaviour
 {
-    [SerializeField]
     private GenericBuilding _CachedBuilding;
 
-    [SerializeField]
+    [Inject]
     private Camera _MainCam;
 
-    [SerializeField]
+    [Inject]
     private BuildingPoolHandler _BuildingPoolHandler;
 
-    [SerializeField]
+    [Inject]
     private UIBuildingHandler _UIBuildingHandler;
 
-    [SerializeField]
+    [Inject]
     private GridHandler _GridHandler;
 
     private ResourceManager _ResourceManager;
@@ -42,6 +43,12 @@ public class BuildingManager : MonoBehaviour
         _ResourceManager = ManagerRegistry.Get<ResourceManager>();
 
          _GroundLayerMask = LayerMask.GetMask(Constants.LAYER_GROUND);
+
+        MessageBroker.Default.Receive<EditModeButtonClickSignal>().Subscribe(_ => 
+        {
+            _MoveMode = !_MoveMode;
+            MessageBroker.Default.Publish(new MoveModeSignal { MoveBuildings = _MoveMode});
+        });
 
         RegisterEvents();
     }

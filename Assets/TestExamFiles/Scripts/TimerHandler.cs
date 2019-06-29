@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 public class TimerHandler : MonoBehaviour
@@ -7,11 +8,18 @@ public class TimerHandler : MonoBehaviour
     [SerializeField]
     private List<EventTimerClass> _EventTimerList = new List<EventTimerClass>();
     private List<EventTimerClass> _ToRemove = new List<EventTimerClass>();
+
     private void Awake()
     {
-        ManagerRegistry.Register<TimerHandler>(this);
-
         _EventTimerList = new List<EventTimerClass>();
+    }
+
+    private void Start()
+    {
+        MessageBroker.Default.Receive<RegisterTimeSignal>().Subscribe(_ =>
+        {
+            _EventTimerList.Add(_.EventTimerClass);
+        }).AddTo(this) ;
     }
 
     void Update()
@@ -49,8 +57,4 @@ public class TimerHandler : MonoBehaviour
         }
     }
 
-    public void RegisterTimer(EventTimerClass timerClass)
-    {
-        _EventTimerList.Add(timerClass);
-    }
 }

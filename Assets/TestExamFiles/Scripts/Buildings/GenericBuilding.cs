@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -100,8 +101,8 @@ public class GenericBuilding : MonoBehaviour
             TimerReach = buildingCompleteEvent,
             DurationEvent = durationTickEvent
         };
-        ManagerRegistry.Get<TimerHandler>().RegisterTimer(newTimerClass);
 
+        MessageBroker.Default.Publish(new RegisterTimeSignal { EventTimerClass = newTimerClass });
     }
 
     private void RegisterResource()
@@ -143,7 +144,7 @@ public class GenericBuilding : MonoBehaviour
             TimerReach = _TimerReachEvent,
             DurationEvent = _TimerTickEvent
         };
-        ManagerRegistry.Get<TimerHandler>().RegisterTimer(newTimerClass);
+        MessageBroker.Default.Publish(new RegisterTimeSignal { EventTimerClass = newTimerClass });
     }
 
     private void ListenToTicker(float tick)
