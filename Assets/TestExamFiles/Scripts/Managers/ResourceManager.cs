@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -9,22 +8,23 @@ public class ResourceManager : MonoBehaviour
     [Inject]
     private UIResourceHandler _UIResourceHandler;
 
+    [SerializeField]
+    private List<ResourceData> _ResourceData;
+
     private ConsumeResourceEvent _ConsumeResourceEvent = new ConsumeResourceEvent();
     public ConsumeResourceEvent ConsumeResourceEvent { get { return _ConsumeResourceEvent; } }
 
     private ConsumeResourceEvent _AddResourceEvent = new ConsumeResourceEvent();
     public ConsumeResourceEvent AddResourceEvent { get { return _AddResourceEvent; } }
 
-    [SerializeField]
-    private List<ResourceData> _ResourceData;
+    #region Init
 
     private void Awake()
     {
         ManagerRegistry.Register<ResourceManager>(this);
     }
 
-
-    void Start()
+    private void Start()
     {
         _ConsumeResourceEvent.AddListener(_ =>
         {
@@ -41,23 +41,16 @@ public class ResourceManager : MonoBehaviour
             MessageBroker.Default.Publish(new ResourcesUpdatedSignal());
         });
 
-
         _ResourceData.Find(_ => _.ResourceType == ResourceType.Gold).Quantity = 100;
         _ResourceData.Find(_ => _.ResourceType == ResourceType.Steel).Quantity = 0;
         _ResourceData.Find(_ => _.ResourceType == ResourceType.Wood).Quantity = 0;
 
         MessageBroker.Default.Publish(new ResourcesUpdatedSignal());
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Y))
-        {
-            _ResourceData.Find(_ => _.ResourceType == ResourceType.Gold).Quantity = 1000;
-            _ResourceData.Find(_ => _.ResourceType == ResourceType.Steel).Quantity = 1000;
-            _ResourceData.Find(_ => _.ResourceType == ResourceType.Wood).Quantity = 1000;
-        }
-    }
 
+    #endregion Init
+
+    #region RequestCalls
 
     public Sprite RequestSprite(ResourceType type)
     {
@@ -67,7 +60,7 @@ public class ResourceManager : MonoBehaviour
     public bool SufficientResources(List<ResourceCostClass> costList)
     {
         int costCount = costList.Count;
-        for(int i = 0; i < costCount; i++)
+        for (int i = 0; i < costCount; i++)
         {
             if (costList[i].Quantity > _ResourceData.Find(_ => _.ResourceType == costList[i].ResourceType).Quantity)
             {
@@ -76,4 +69,6 @@ public class ResourceManager : MonoBehaviour
         }
         return true;
     }
+
+    #endregion RequestCalls
 }

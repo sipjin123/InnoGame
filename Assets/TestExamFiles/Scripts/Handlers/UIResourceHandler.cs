@@ -1,21 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class UIResourceHandler : MonoBehaviour
 {
     [SerializeField]
-    List<UIResourcePair> _ResourceUIPair;
-
-    private void Awake()
-    {
-        ManagerRegistry.Register<UIResourceHandler>(this);
-    }
-
-    private void OnDestroy()
-    {
-        ManagerRegistry.Remove<UIResourceHandler>(this);
-    }
+    private List<UIResourcePair> _ResourceUIPair;
 
     private void Start()
     {

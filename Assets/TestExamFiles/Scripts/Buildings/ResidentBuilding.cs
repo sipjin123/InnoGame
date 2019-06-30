@@ -1,9 +1,3 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class ResidentBuilding : GenericBuilding
+﻿public class ResidentBuilding : GenericBuilding
 {
-
-
 }

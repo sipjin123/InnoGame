@@ -11,14 +11,18 @@ public class UITimerTemplate : MonoBehaviour
 
     private float _MaxCapacity;
 
-    public void SetMaxCap(float max)
+    private Transform _TransformReference;
+
+    public void SetMaxCap(float max, Transform transformReference)
     {
+        _TransformReference = transformReference;
         _MaxCapacity = max;
     }
 
     public void UpdateText(float val)
     {
+        transform.localPosition = _TransformReference.localPosition;
         _TimerText.text = val.ToString("f0");
-        _ProgressBar.fillAmount =   val / _MaxCapacity;
+        _ProgressBar.fillAmount = val / _MaxCapacity;
     }
 }

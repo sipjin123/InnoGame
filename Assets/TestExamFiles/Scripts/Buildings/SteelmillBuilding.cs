@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class SteelmillBuilding : GenericBuilding
+﻿public class SteelmillBuilding : GenericBuilding
 {
     public override void Initialize()
     {

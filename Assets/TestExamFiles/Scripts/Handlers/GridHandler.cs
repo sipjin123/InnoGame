@@ -6,16 +6,16 @@ public class GridHandler : MonoBehaviour
     [SerializeField]
     private float _GridSize = 12;
 
-    private List<Vector2> _OccupiedGrid = new List<Vector2>();
-
     [SerializeField]
     private float _GridSpacing = 10;
 
     [SerializeField]
     private List<GameObject> _ErrorIndicators;
 
+    private List<Vector2> _OccupiedGrid = new List<Vector2>();
     private Vector2 _SnapGridPosition;
-    
+
+    #region Public Methos
 
     public bool SnapToGrid(Transform bldng, Vector2 size)
     {
@@ -87,6 +87,10 @@ public class GridHandler : MonoBehaviour
         }
     }
 
+    #endregion Public Methos
+
+    #region Helper Methos
+
     private void ClearIndicators()
     {
         int indicatorCount = _ErrorIndicators.Count;
@@ -107,4 +111,6 @@ public class GridHandler : MonoBehaviour
 
         return new Vector2(xCoord, yCoord);
     }
+
+    #endregion Helper Methos
 }

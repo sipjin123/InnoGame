@@ -1,6 +1,6 @@
-﻿
-using System;
+﻿using System;
 using UnityEngine.UI;
+
 [Serializable]
 public class UIResourcePair
 {

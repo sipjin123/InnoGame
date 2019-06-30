@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Zenject;
+
 public class MainGameInstaller : MonoInstaller
 {
     [SerializeField]
@@ -15,6 +14,9 @@ public class MainGameInstaller : MonoInstaller
 
     [SerializeField]
     private UIResourceHandler _UIResourceHandler;
+
+    [SerializeField]
+    private UIStatPoolHandler _UIStatPoolHandler;
 
     [SerializeField]
     private Camera _Camera;
@@ -37,6 +39,11 @@ public class MainGameInstaller : MonoInstaller
                 .FromInstance(_UIResourceHandler)
                 .AsSingle()
                 .NonLazy();
+
+        this.Container.Bind<UIStatPoolHandler>()
+               .FromInstance(_UIStatPoolHandler)
+               .AsSingle()
+               .NonLazy(); 
 
         this.Container.Bind<Camera>()
                 .FromInstance(_Camera)

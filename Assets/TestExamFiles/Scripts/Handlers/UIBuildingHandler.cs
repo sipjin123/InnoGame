@@ -6,21 +6,35 @@ using UnityEngine.UI;
 
 public class UIBuildingHandler : MonoBehaviour
 {
-    [SerializeField]
-    private List<UIBuildingPair> _UIBuildingPair;
-
     private SelectBuildingEvent _PointerDownEvent = new SelectBuildingEvent();
     private SelectBuildingEvent _PointerUpEvent = new SelectBuildingEvent();
     public SelectBuildingEvent PointerDownEvent { get { return _PointerDownEvent; } }
     public SelectBuildingEvent PointerUpEvent { get { return _PointerUpEvent; } }
+
+    [SerializeField]
+    private List<UIBuildingPair> _UIBuildingPair;
+
+    [SerializeField]
+    private Canvas _BuildPanel;
+
     [SerializeField]
     private Button _EditButton;
-    private bool _InEditMode;
+
+    [SerializeField]
+    private Text _ButtonText;
+
     [SerializeField]
     private GameObject _EditModeNotif;
 
     private BuildingManager _BuildingManager;
     private ResourceManager _ResourceManager;
+    private bool _InEditMode;
+
+    private const string EDIT_MODE = "Edit Mode";
+    private const string REGULAR_MODE = "Cancel Edit Mode";
+
+    #region Init
+
     private void Awake()
     {
         _EditButton.onClick.AddListener(() =>
@@ -31,6 +45,8 @@ public class UIBuildingHandler : MonoBehaviour
         {
             var result = _.MoveBuildings;
             _EditModeNotif.SetActive(result);
+            _BuildPanel.enabled = !result;
+            _ButtonText.text = result ? REGULAR_MODE : EDIT_MODE;
         }).AddTo(this);
 
         MessageBroker.Default.Receive<ResourcesUpdatedSignal>().Subscribe(_ =>
@@ -45,8 +61,11 @@ public class UIBuildingHandler : MonoBehaviour
         _ResourceManager = ManagerRegistry.Get<ResourceManager>();
 
         SetupTemplates();
-
     }
+
+    #endregion Init
+
+    #region UpdateUITemplate
 
     private void SetupTemplates()
     {
@@ -67,7 +86,6 @@ public class UIBuildingHandler : MonoBehaviour
             _UIBuildingPair[i].UIBuldingTemplate.BuildingNameText.text = _UIBuildingPair[i].BuildingType.ToString();
 
             _UIBuildingPair[i].UIBuldingTemplate.InsufficientNotice.SetActive(false);
-
 
             EventTrigger trigger = _UIBuildingPair[i].UIButton;
 
@@ -101,13 +119,14 @@ public class UIBuildingHandler : MonoBehaviour
             int innerLoopCount = buildingCostInfo.Count;
             for (int q = 0; q < innerLoopCount; q++)
             {
-                if(_ResourceManager.SufficientResources(buildingCostInfo))
+                if (_ResourceManager.SufficientResources(buildingCostInfo))
                 {
                     cantAfford = false;
                 }
             }
             _UIBuildingPair[i].UIBuldingTemplate.InsufficientNotice.SetActive(cantAfford);
-
         }
     }
+
+    #endregion UpdateUITemplate
 }

@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UniRx;
 using UnityEngine;
 
 public class UIStatPoolHandler : MonoBehaviour
 {
     [SerializeField]
-    private List<UITimerTemplate> 
-        _UITimerUsedList = new List<UITimerTemplate>(), 
+    private List<UITimerTemplate>
+        _UITimerUsedList = new List<UITimerTemplate>(),
         _UITimerReserverList = new List<UITimerTemplate>();
 
     [SerializeField]
@@ -18,27 +18,48 @@ public class UIStatPoolHandler : MonoBehaviour
     [SerializeField]
     private Transform _Pool;
 
+    private bool _FollowEntity;
+
+    #region Init
+
     private void Awake()
     {
-        ManagerRegistry.Register<UIStatPoolHandler>(this);
+        MessageBroker.Default.Receive<MoveModeSignal>().Subscribe(_ =>
+        {
+            _FollowEntity = _.MoveBuildings;
+        }).AddTo(this);
     }
 
-    public UIProductionTemplate RequestProductionTemplate(Vector3 location)
-    {
-        _UIProductionTemplate.gameObject.SetActive(true);
-        _UIProductionTemplate.transform.position = location;
-        return _UIProductionTemplate;
-    }
+    #endregion Init
+
+    #region Public Methods
 
     public void RefreshTemplate()
     {
-        //_UIProductionTemplate.StopListeners.Invoke();
         if (_UIProductionTemplate.CurrentBuilding)
         {
             _UIProductionTemplate.CurrentBuilding.PurgeProgressView();
             _UIProductionTemplate.CurrentBuilding = null;
             _UIProductionTemplate.gameObject.SetActive(false);
         }
+    }
+
+    public void ReturnTimer(UITimerTemplate timerObj)
+    {
+        timerObj.gameObject.SetActive(false);
+        _UITimerUsedList.Remove(timerObj);
+        _UITimerReserverList.Add(timerObj);
+    }
+
+    #endregion Public Methods
+
+    #region Public Requests
+
+    public UIProductionTemplate RequestProductionTemplate(Vector3 location)
+    {
+        _UIProductionTemplate.gameObject.SetActive(true);
+        _UIProductionTemplate.transform.position = location;
+        return _UIProductionTemplate;
     }
 
     public UITimerTemplate RequestTimer(Vector3 positon)
@@ -58,10 +79,6 @@ public class UIStatPoolHandler : MonoBehaviour
             return timerToGive;
         }
     }
-    public void ReturnTimer(UITimerTemplate timerObj)
-    {
-        timerObj.gameObject.SetActive(false);
-        _UITimerUsedList.Remove(timerObj);
-        _UITimerReserverList.Add(timerObj);
-    }
+
+    #endregion Public Requests
 }
