@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
+
+#if UNITY_EDITOR
 
 public class ScriptableObjGenerator : MonoBehaviour
 {
@@ -21,6 +21,7 @@ public class ScriptableObjGenerator : MonoBehaviour
         ResourceData asset = ScriptableObject.CreateInstance<ResourceData>();
         Process(asset);
     }
+
     [MenuItem("Assets/Create/Create BuildingData Object")]
     public static void Create_BuildingData()
     {
@@ -28,3 +29,5 @@ public class ScriptableObjGenerator : MonoBehaviour
         Process(asset);
     }
 }
+
+#endif
