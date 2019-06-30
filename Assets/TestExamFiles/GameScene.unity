@@ -1317,6 +1317,7 @@ MonoBehaviour:
   _UIBuildingHandler: {fileID: 799497133}
   _BuildingPoolHandler: {fileID: 2121694067}
   _UIResourceHandler: {fileID: 989477102}
+  _UIStatPoolHandler: {fileID: 764755622}
   _Camera: {fileID: 259462654}
 --- !u!1 &259462652
 GameObject:
@@ -2034,7 +2035,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Move Mode
+  m_Text: Edit Mode
 --- !u!222 &451118018
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2734,7 +2735,9 @@ MonoBehaviour:
   - BuildingType: 4
     UIButton: {fileID: 2124623667}
     UIBuldingTemplate: {fileID: 2124623668}
+  _BuildPanel: {fileID: 1988533369}
   _EditButton: {fileID: 2123159297}
+  _ButtonText: {fileID: 451118017}
   _EditModeNotif: {fileID: 115107623}
 --- !u!1 &807083997
 GameObject:
@@ -6225,7 +6228,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: -0}
-  m_SizeDelta: {x: 200, y: 200}
+  m_SizeDelta: {x: 250, y: 200}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &2123159297
 MonoBehaviour:
