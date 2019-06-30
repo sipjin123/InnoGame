@@ -22,6 +22,9 @@ public class ResourceManager : MonoBehaviour
     private void Awake()
     {
         ManagerRegistry.Register<ResourceManager>(this);
+        _ResourceData.Find(_ => _.ResourceType == ResourceType.Gold).Quantity = 100;
+        _ResourceData.Find(_ => _.ResourceType == ResourceType.Steel).Quantity = 0;
+        _ResourceData.Find(_ => _.ResourceType == ResourceType.Wood).Quantity = 0;
     }
 
     private void Start()
@@ -40,10 +43,6 @@ public class ResourceManager : MonoBehaviour
             _UIResourceHandler.UpdateResourceText(_.ResourceType, resource.Quantity);
             MessageBroker.Default.Publish(new ResourcesUpdatedSignal());
         });
-
-        _ResourceData.Find(_ => _.ResourceType == ResourceType.Gold).Quantity = 100;
-        _ResourceData.Find(_ => _.ResourceType == ResourceType.Steel).Quantity = 0;
-        _ResourceData.Find(_ => _.ResourceType == ResourceType.Wood).Quantity = 0;
 
         MessageBroker.Default.Publish(new ResourcesUpdatedSignal());
     }
